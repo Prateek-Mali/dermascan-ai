@@ -1,11 +1,11 @@
-# 🔬 DermaScan AI — Skin Disease Detector
+# 🩺 DermaScan AI — AI-Powered Skin Disease Detection
 
-> AI-powered skin disease classification using Deep Learning trained on 10,015 clinical dermoscopy images.
+A simple, professional web application that uses deep learning to screen skin lesion images across 7 common skin conditions.
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue?style=flat&logo=python)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange?style=flat&logo=tensorflow)
 ![Flask](https://img.shields.io/badge/Flask-REST_API-green?style=flat&logo=flask)
-![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=flat&logo=react)
+![HTML/CSS/JS](https://img.shields.io/badge/Frontend-HTML%2FCSS%2FJS-yellow?style=flat)
 
 ---
 
@@ -37,22 +37,18 @@
 
 ---
 
-## 🚀 How to Run
+## 🚀 Quick Start — One Command!
 
-### Mac / Linux
 ```bash
-bash start.sh
+bash run.sh
 ```
 
-### Windows
-Double click `start.bat`
+That's it! The script will:
+- ✅ Set up the virtual environment (if needed)
+- ✅ Install all dependencies automatically
+- ✅ Start the Flask server
 
-### Then open browser
-```
-http://127.0.0.1:5001
-```
-
-The script handles everything automatically — Python check, virtual environment, dependencies, server start.
+Then open your browser and visit: **http://127.0.0.1:5001**
 
 ---
 
@@ -66,19 +62,26 @@ The script handles everything automatically — Python check, virtual environmen
 ## 🗂️ Project Structure
 
 ```
-dermascan-ai/
-├── start.sh                         ← Mac/Linux one command
-├── start.bat                        ← Windows one click
+deep/
+├── run.sh                           ← RUN THIS! (one command)
 ├── README.md
-├── backend/
-│   ├── app.py                       ← Flask REST API
-│   ├── requirements.txt
-│   ├── skin_disease_model.keras     ← Trained model
-│   └── class_names.json
 ├── frontend/
-│   └── index.html                   ← React UI (3 pages)
-└── notebook/
-    └── skin_disease_training.ipynb  ← Training code
+│   ├── index.html                   ← Home page
+│   ├── upload.html                  ← Upload page
+│   ├── result.html                  ← Result page
+│   ├── css/
+│   │   └── styles.css
+│   └── js/
+│       ├── common.js
+│       ├── upload.js
+│       └── result.js
+└── backend/
+    ├── app.py                       ← Flask server
+    ├── requirements.txt
+    ├── venv/                        ← Virtual environment (auto-created)
+    └── models/
+        ├── skin_disease_model.keras
+        └── class_names.json
 ```
 
 ---
@@ -86,70 +89,141 @@ dermascan-ai/
 ## 🔌 API
 
 ### POST /predict
-```json
-Request : multipart/form-data { image: file }
+**Request:**
+```
+Content-Type: multipart/form-data
+Body: { image: <image_file> }
+```
 
-Response:
+**Response:**
+```json
 {
-  "disease": "melanocytic_nevi",
-  "confidence": 79.4,
-  "all_predictions": [
-    { "disease": "melanocytic_nevi", "confidence": 79.4 },
-    { "disease": "melanoma", "confidence": 14.2 }
-  ]
+  "prediction": "melanocytic_nevi",
+  "confidence": 0.6993706226348877,
+  "probabilities": {
+    "actinic_keratosis": 0.0378,
+    "basal_cell_carcinoma": 0.0108,
+    "benign_keratosis": 0.1058,
+    "dermatofibroma": 0.0181,
+    "melanocytic_nevi": 0.6994,
+    "melanoma": 0.0313,
+    "vascular_lesion": 0.0969
+  }
 }
 ```
 
-### GET /health
-```json
-{ "status": "ok", "model_loaded": true }
-```
-
 ---
 
-## 🏗️ Tech Stack
+## ⚙️ Tech Stack
 
-| Layer | Technology |
+| Component | Technology |
 |---|---|
-| Deep Learning | TensorFlow 2.x, Keras, EfficientNetB0 |
-| Backend | Flask, Flask-CORS, Pillow, NumPy |
-| Frontend | React 18, plain CSS |
-| Training | Google Colab T4 GPU |
+| **ML Model** | TensorFlow 2.16.2, Keras 3.10.0, EfficientNetB0 |
+| **Backend** | Flask (Python) |
+| **Frontend** | Plain HTML, CSS, JavaScript (no build step needed) |
+| **Image Processing** | Pillow, NumPy |
+| **Input** | 224×224 RGB images (JPG/PNG) |
+| **Output** | 7-class probability distribution |
 
 ---
 
-## 📊 Training Results
+## 📝 Model Architecture
 
 ```
-Phase 1 — Frozen base (15 epochs)
-  Validation accuracy : 68.6% ✅ Best
-
-Phase 2 — Fine-tuning top 20 layers
-  Validation accuracy : 67.1%
-  → Reverted to Phase 1 automatically
+Input (224×224×3)
+    ↓
+EfficientNetB0 (Pre-trained, Frozen)
+    ↓
+GlobalAveragePooling2D
+    ↓
+BatchNormalization
+    ↓
+Dropout(0.5)
+    ↓
+Dense(256, ReLU)
+    ↓
+BatchNormalization
+    ↓
+Dropout(0.3)
+    ↓
+Dense(7, Softmax)  ← Output (7 classes)
 ```
 
 ---
 
-## ⚠️ Medical Disclaimer
+## ⚠️ Important Disclaimer
 
-This is a **student research project** for educational purposes only.
-Not a substitute for professional medical diagnosis.
-Always consult a certified dermatologist for any skin concerns.
+This is an **educational project** made by **Prateek Mali** (2-year AIML student).
+
+**DO NOT TAKE THIS SERIOUSLY!** 
+- Results are for screening purposes only — NOT for medical diagnosis.
+- This is NOT a replacement for professional medical advice.
+- **Always consult a licensed dermatologist** for accurate diagnosis and treatment.
+- The model is trained on limited data and may have errors.
+- Never rely on these results for medical decisions.
 
 ---
 
 ## 👨‍💻 Author
 
-**Pratik Mali** — B.Tech AI/ML
-- GitHub: [@Prateek-Mali](https://github.com/Prateek-Mali)
+**Prateek Mali** — 2-Year AIML Student
+
+This is an educational project to demonstrate AI/ML skills in a real-world medical screening context.
 
 ---
 
-## 📄 Dataset
+## 🎯 Features
 
-HAM10000 — [Kaggle](https://www.kaggle.com/datasets/kmader/skin-cancer-mnist-ham10000) — CC BY-NC-SA 4.0
+✅ **Drag-and-drop upload** — Intuitive image upload interface
+✅ **Real-time predictions** — Get results in seconds
+✅ **Confidence scores** — See how confident the AI is
+✅ **Full breakdown** — View all 7 condition probabilities
+✅ **Color-coded results** — Green/Orange/Red concern levels
+✅ **Mobile responsive** — Works on phone, tablet, desktop
+✅ **Client-side validation** — File type & size checks
+✅ **Error handling** — Clear, friendly error messages
 
 ---
 
-⭐ If you found this useful, give it a star!
+## 📋 Requirements
+
+- **Python 3.9+** — [python.org](https://www.python.org)
+- **pip** (comes with Python)
+- **bash** (pre-installed on macOS/Linux)
+
+Check your Python version:
+```bash
+python3 --version
+```
+
+---
+
+## 🛑 Stop the Server
+
+Press `Ctrl+C` in the terminal where the server is running.
+
+---
+
+## 🤝 Troubleshooting
+
+**Problem:** Port 5001 already in use
+```bash
+# Kill process using port 5001
+lsof -ti:5001 | xargs kill -9
+```
+
+**Problem:** ModuleNotFoundError
+```bash
+# Make sure you ran bash run.sh (which installs dependencies)
+bash run.sh
+```
+
+**Problem:** Python not found
+```bash
+# Install Python 3.9+ from python.org
+python3 --version
+```
+
+---
+
+⭐ **Star this project if you found it useful!**
