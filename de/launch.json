@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dermascan-backend",
+      "runtimeExecutable": "/bin/bash",
+      "runtimeArgs": ["/Users/prateekmali/Downloads/deep/backend/start.sh"],
+      "port": 5001
+    }
+  ]
+}
